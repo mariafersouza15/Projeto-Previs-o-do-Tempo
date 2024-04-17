@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Previsão do tempo</title>
+
+    <style>
+        */*o asterisco se aplica para todos*/{
+            margin: 0;
+            padding: 0;
+            font-family: 'Open Sans',sans-serif;
+        }
+        body{
+            background-image:URL("https://source.unsplash.com/1600x900/?landscape");
+            height: 100vh;/*altura*/
+            width: 100vw;/*largura*/
+            display: flex;/*libera algumas opções*/
+            align-items: center;/*alinha o item*/
+            justify-content: center;/*na horizontal justifica meu item ao centro*/
+
+        }
+        .caixa{
+            background-color: black;
+            opacity: 0.8; /*transparencia*/
+            width: 95%; /*largura*/
+            max-width: 450px;/*o tamanho máximo q ele pode ter*/
+            border-radius: 25px;/*serve para arredondar a borda*/
+            padding: 20px;/*distancia os itens*/
+            
+            
+            /*front-size estabelece o tamanho das fontes*/
+        }
+        button{
+            border: none;/*sem borda*/
+            padding: 5px;
+            background-color: #7c7c7c2b;
+            cursor: pointer;/*mãozinha de pesquisa*/
+            border-radius: 50px;
+            opacity: 0.8;
+            float:right;/*vá para a direita*/
+        }
+        button:hover/*estilizar a lupa com cor quando o mouse para em cima*/{
+            background-color: #7c7c7c;
+        }
+        .lupa{
+            height: 25px;
+            width: 25px;
+    
+        }
+        input{
+            border: none;
+            outline: none;
+            border-radius: 20px;
+            padding: 5px;
+            background-color: #7c7c7c2b;
+            color: aliceblue;
+            font: Arial;
+            width: calc(100% - 100px);/*esse calc é 100% menos um pouinho para dar o espaço*/
+            font-size: 22px;
+        }
+        h1{
+            color: rgb(81, 92, 92);
+            font-size: 28px;
+        }
+        .grau{
+            color: white;
+            font-size: 20px;
+            margin-top: 10px;
+        }
+        .umidade{
+            color: white;
+            font-size: 20px;
+            margin-top: 10px;
+        }
+        .caixinha{
+            margin-top: 30px;/*descer as letras/desgrudar*/
+        }
+
+    </style>
+</head>
+<body>
+    <div class="caixa"> <!--class é como se fosse um apelido pra div-->
+    <input class="putcity" placeholder="Digite a cidade" >
+    <button onclick="cliqueinobotao()"><!--ação quando vc clicar no botão-->
+            <img class="lupa" src="https://www.svgrepo.com/show/390590/find-glass-minus-online-search-seo.svg" >
+    </button>
+    <div>
+        <div class="caixinha">
+        <h1>Tempo em São Paulo</h1>
+        <p class="grau">21°C</p>
+        <p class="umidade">Umidade: 70%</p>
+        <img class="imagem nuvem" src="https://openweathermap.org/img/wn/04n.png" 
+        
+    </div>
+    </div> 
+    <script>
+        let chave = 'cebcd482eda57fa9a6714c1c2ba91885'
+
+        function tela(dados){
+            console.log(dados) //serve para colocar os dados na tela
+
+            document.querySelector("h1").innerHTML = "Tempo em " + dados.name
+            //vai no html;procura o h1;e vamos trocar esse texto
+            document.querySelector(".grau").innerHTML = Math.floor(dados.main.temp) + "°C"
+            //Mah.florr -> ferramenta do js para arredondar valores
+            document.querySelector(".imagem.nuvem").src = "https://openweathermap.org/img/wn/" + dados.weather[0].icon + ".png"
+            document.querySelector(".umidade").innerHTML = "Umidade: " + dados.main.humidity + "%"
+
+        }
+
+
+        async function buscarcidade(city){ //async significa q a função acessa em um servidor
+
+            console.log(city)
+
+                let dados = await fetch("https://api.openweathermap.org/data/2.5/weather?q=" + city + "&appid=cebcd482eda57fa9a6714c1c2ba91885&units=metric").then(resposta => resposta.json())
+
+                //&units=metric -> mudando para graus celsius
+                //await é pra esperar que aconteça
+                //fetch ferramenta do js para acessar servidores
+                //toda vez q for acessar um servidor,pedi pro js esperar(await)e fetch para acessa-ló
+                //then(então) assim que as inf chegarem,pega a resposta e transforma-lá em json(forma q o js entende)
+
+                tela(dados)
+            }
+        function cliqueinobotao(){
+            let city = document.querySelector(".putcity").value //value é só pra selecionar apenas o valor
+
+            buscarcidade(city)
+            /*nesse código ele está indo lá no INPUT
+              pegando informação quando eu clico no
+              botão e guardando no buscarcidade,depois 
+              enviando a inf no buscarcidade(cidade)
+            */
+        }
+    </script>
+</body>
+</html>
